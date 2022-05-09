@@ -15,7 +15,6 @@ public class EmailSenderService {
         mailMessage.setTo(to);
         mailMessage.setSubject(subject);
         mailMessage.setText(body);
-        mailMessage.setFrom("spring-mail@gmail.com");
         javaMailSender.send(mailMessage);
         System.out.println("Email sent successfully.");
     }

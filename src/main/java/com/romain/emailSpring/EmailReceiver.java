@@ -1,8 +1,12 @@
 package com.romain.emailSpring;
 
-import javax.mail.*;
-import java.io.IOException;
-import java.util.*;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Store;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class EmailReceiver {
 
@@ -29,22 +33,22 @@ public class EmailReceiver {
             Store mailStore = session.getStore(storeType);
             mailStore.connect(pop3Host, pop3Username, pop3Password);
 
-            Folder folder = mailStore.getFolder("INBOX");
+            Folder folder =  mailStore.getFolder("INBOX");
             folder.open(Folder.READ_ONLY);
-
-            Message[] emailMessages = folder.getMessages();
-            List<Message> emailMessagesList = new ArrayList<>(Arrays.asList(emailMessages));
-            Collections.reverse(emailMessagesList);
-
-            List<String> tenFirstObjects = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                Message message = emailMessagesList.get(i);
-                tenFirstObjects.add(message.getSubject());
+            Message[] messages = folder.getMessages();
+            List<Message> tenFirstMails = new ArrayList<>();
+            for (int i = 0; i < messages.length ; i++) {
+                Message message = messages[i];
+                tenFirstMails.add(message);
+            }
+            List<String> tenFirstSubjects = new ArrayList<>();
+            for (Message tenFirstMail : tenFirstMails) {
+                tenFirstSubjects.add(tenFirstMail.getSubject());
             }
 
             folder.close(false);
             mailStore.close();
-            return tenFirstObjects;
+            return tenFirstSubjects;
 
         } catch (Exception e) {
             e.printStackTrace();
